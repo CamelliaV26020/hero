@@ -1,0 +1,7 @@
+C:\Users\Haiqi\source\repos\Hero\Hero\bin\Debug\Hero.exe.config
+C:\Users\Haiqi\source\repos\Hero\Hero\bin\Debug\Hero.exe
+C:\Users\Haiqi\source\repos\Hero\Hero\bin\Debug\Hero.pdb
+C:\Users\Haiqi\source\repos\Hero\Hero\obj\Debug\Hero.csproj.AssemblyReference.cache
+C:\Users\Haiqi\source\repos\Hero\Hero\obj\Debug\Hero.csproj.CoreCompileInputs.cache
+C:\Users\Haiqi\source\repos\Hero\Hero\obj\Debug\Hero.exe
+C:\Users\Haiqi\source\repos\Hero\Hero\obj\Debug\Hero.pdb

@@ -51,7 +51,7 @@ namespace ConsoleApp1
             Archer = 2,
             Mage = 3
         }
-        public struct HeroInfo
+        public struct CharacterInfo
         {
             public string HeroType;//英雄职业类型
             public HeroClass ClasNum;
@@ -61,18 +61,40 @@ namespace ConsoleApp1
             public int PlayerMoney;//英雄金钱
             public bool HeroStatus;//英雄生存状态
         }
+        public class Hero//英雄类
+        {
+            int HeroHP = 100;
+            int HeroMP = 100;
+            int HeroMoney = 0;
+           
+            public void SelfRecover()//自愈技能
+            {
+                Console.WriteLine("SelfRecover");
+            }
+            public void HeroTalk() 
+            {
+                Console.WriteLine("I am a hero!");
+            }
+            public void RecoverTalk() 
+            {
+                Console.WriteLine("Good! HP recovered!");
+            }
+        }
         static void Main(string[] args)
         {
             HeroClass ClassType = HeroClass.Default;
-
-            HeroInfo Warrior;//实例化一个活的战士
+                               
+            Hero Kiriya = new Hero();//实例化一个英雄Kiriya
+            Kiriya.SelfRecover();
+           
+            CharacterInfo Warrior;//实例化Warrior结构体
             Warrior.HeroType = "warrior";
             Warrior.PlayerHP = 120;
             Warrior.PlayerMP = 50;
             Warrior.AtkRange = 1.5f;
             Warrior.HeroStatus = true;
 
-            HeroInfo Archer = new HeroInfo();//实例化一个活的弓箭手
+            CharacterInfo Archer = new CharacterInfo();//实例化弓箭手结构体
             Archer.HeroType = "archer";
             Archer.PlayerHP = 100;
             Archer.PlayerMP = 80;

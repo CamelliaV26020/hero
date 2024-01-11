@@ -27,6 +27,18 @@ namespace ConsoleApp1
             }
             return CurrentHP;//返回交易过的当前生命值
         }
+        static int recoverSelfHP(int CurrentHP)
+        {
+            while (CurrentHP < 100)//血量未满100,循环
+            {
+                CurrentHP += 30;
+                if (CurrentHP > 100)//判断最后一次回复生命是不是超过100,最大值为100
+                {
+                    CurrentHP = 100;
+                }
+            }
+            return CurrentHP;//返回当前生命值
+        }
         #endregion
         #region  MP Recover
         static int recoverMP(int CurrentMP, int CurrentMoney)
@@ -42,6 +54,18 @@ namespace ConsoleApp1
                 }
             }
             return CurrentMP;//返回交易过的当前蓝量
+        }
+        #endregion
+        #region Buffs
+        static int AtkBuff(int currentAtk)
+        {
+            currentAtk *= 2;
+            return currentAtk;
+        }
+        static int ArmorDeBuff(int currentArmor)
+        {
+            currentArmor -= 2;
+            return currentArmor;
         }
         #endregion
         public enum HeroClass//枚举职业对应的编号
@@ -61,32 +85,107 @@ namespace ConsoleApp1
             public int PlayerMoney;//英雄金钱
             public bool HeroStatus;//英雄生存状态
         }
+        #region 英雄Class
         public class Hero//英雄类
         {
-            int HeroHP = 100;
-            int HeroMP = 100;
-            int HeroMoney = 0;
+            private string HeroName = "";
+            private int HeroHP = 100;
+            private int HeroMP = 100;
+            private int HeroAtk = 10;
+            private int HeroArmor = 5;
+            private int HeroMoney = 0;
            
             public void SelfRecover()//自愈技能
             {
-                Console.WriteLine("SelfRecover");
+                HeroHP = recoverSelfHP(HeroHP);
+                RecoverTalk();
+                Console.WriteLine(HeroName + " HP is full!");
             }
-            public void HeroTalk() 
+            public void HeroTalk()//默认台词
             {
                 Console.WriteLine("I am a hero!");
             }
-            public void RecoverTalk() 
+            public void RecoverTalk()//治愈时台词
             {
-                Console.WriteLine("Good! HP recovered!");
+                Console.WriteLine("Good! HP Up!");
+                Console.WriteLine(HeroName + " current HP is " + HeroHP);
             }
+            public int ActiveAtk(int SelfAtk, int TargetHP, int TargetArmor) //攻击
+            {
+                TargetHP = TargetHP - (SelfAtk - TargetArmor);//伤害等于攻击方攻击-被攻击方防御
+                return TargetHP;
+            }
+            #region 获取和设置属性
+            public string getName() //获取姓名
+            {
+                return HeroName;
+            }
+            public int getHP() //获取生命值
+            {
+                return HeroHP;
+            }
+            public int getArmor()//获取护甲值
+            {
+                return HeroArmor;
+            }
+            public int getAtk()//获取攻击力
+            {
+                return HeroAtk;
+            }
+            public void setName(string currentName) //设置姓名
+            {
+                HeroName = currentName;
+            }
+            public void setHP(int currentHP) //设置生命值
+            {
+                HeroHP = currentHP;
+            }
+            public void setArmor(int currentArmor)//设置护甲值
+            {
+                HeroArmor = currentArmor;
+            }
+            public void setAtk(int currentAtk)//设置攻击力
+            {
+                HeroAtk = currentAtk;
+            }
+            #endregion
+            #region 实例化方法
+            public Hero() { }
+            public Hero(string setName, int setHP, int setMP, int setAtk, int setArmor, int setMoney)
+            {
+                HeroName = setName;
+                HeroHP = setHP;
+                HeroMP = setMP;
+                HeroAtk = setAtk;
+                HeroArmor = setArmor;
+                HeroMoney = setMoney;
+            }
+            #endregion
         }
+
+        #endregion
         static void Main(string[] args)
         {
             HeroClass ClassType = HeroClass.Default;
-                               
-            Hero Kiriya = new Hero();//实例化一个英雄Kiriya
-            Kiriya.SelfRecover();
-           
+
+            Hero Kiriya = new Hero("Kiriya", 100, 100, 10, 5, 0);//实例化一个英雄Kiriya
+            Hero David = new Hero("David", 100, 100, 10, 5, 0);//实例化一个英雄David
+
+            //Kiriya.setName("Kiriya");
+            //David.setName("David");//设置名字
+
+            Kiriya.setAtk(AtkBuff(Kiriya.getAtk()));//攻击buff
+            David.setArmor(ArmorDeBuff(David.getArmor()));//护甲debuff
+
+            int DamageDealt = Kiriya.getAtk()- David.getArmor();
+
+            int FinalHP = Kiriya.ActiveAtk(Kiriya.getAtk(), David.getHP(), David.getArmor());
+            //Kiriya攻击David,计算David剩余生命
+            Console.WriteLine(Kiriya.getName() + " attacked " + David.getName() + ", dealt " + DamageDealt + " Damage!");
+            Console.WriteLine(David.getName() + " remains " + FinalHP + " HP!");
+
+            David.SelfRecover();//David发动自愈技能
+
             CharacterInfo Warrior;//实例化Warrior结构体
             Warrior.HeroType = "warrior";
             Warrior.PlayerHP = 120;
@@ -101,28 +200,28 @@ namespace ConsoleApp1
             Archer.AtkRange = 3.5f;
             Archer.HeroStatus = true;
 
-            PlayerHP = recoverHP(PlayerHP, PlayerMoney);
-            if (PlayerHP == 100)
-            {
-                Console.WriteLine("You current HP is full!");
-                Console.WriteLine("You money: " + PlayerMoney);
-            }
-            else
-            {
-                Console.WriteLine("You HP: " + PlayerHP);
-                Console.WriteLine("You money: " + PlayerMoney);
-            }
-            PlayerMP = recoverMP(PlayerMP, PlayerMoney);
-            if (PlayerMP == 100)
-            {
-                Console.WriteLine("You current MP is full!");
-                Console.WriteLine("You money: " + PlayerMoney);
-            }
-            else
-            {
-                Console.WriteLine("You MP: " + PlayerMP);
-                Console.WriteLine("You money: " + PlayerMoney);
-            }
+            //PlayerHP = recoverHP(PlayerHP, PlayerMoney);
+            //if (PlayerHP == 100)
+            //{
+            //    Console.WriteLine("You current HP is full!");
+            //    Console.WriteLine("You money: " + PlayerMoney);
+            //}
+            //else
+            //{
+            //    Console.WriteLine("You HP: " + PlayerHP);
+            //    Console.WriteLine("You money: " + PlayerMoney);
+            //}
+            //PlayerMP = recoverMP(PlayerMP, PlayerMoney);
+            //if (PlayerMP == 100)
+            //{
+            //    Console.WriteLine("You current MP is full!");
+            //    Console.WriteLine("You money: " + PlayerMoney);
+            //}
+            //else
+            //{
+            //    Console.WriteLine("You MP: " + PlayerMP);
+            //    Console.WriteLine("You money: " + PlayerMoney);
+            //}
             Console.ReadKey();
         }
     }
